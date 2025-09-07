@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Swal from 'sweetalert2';
 
 const instance = axios.create({
   baseURL: 'https://localhost:7052',
@@ -24,10 +23,10 @@ instance.interceptors.response.use(
   async (error) => {
     if (error.response && error.response.status === 401) {
       const currentRoute = window.location.pathname;
-      if (currentRoute !== '/login' || currentRoute !== '/') {
+      
+      if (currentRoute !== '/login' && currentRoute !== '/') {
         localStorage.removeItem('authToken');
         window.location.href = '/login';
-        Swal.fire("Atenção", "Sua sessão expirou.", "warning");
       }
     }
 

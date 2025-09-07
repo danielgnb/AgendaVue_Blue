@@ -6,7 +6,7 @@
         <label for="nome" class="form-label">Nome</label>
         <input
           id="nome"
-          v-model="contact.Nome"
+          v-model="contact.nome"
           type="text"
           class="form-control"
           placeholder="Digite o nome do contato"
@@ -18,7 +18,7 @@
         <label for="email" class="form-label">Email</label>
         <input
           id="email"
-          v-model="contact.Email"
+          v-model="contact.email"
           type="email"
           class="form-control"
           placeholder="Digite o email"
@@ -30,7 +30,7 @@
         <label for="telefone" class="form-label">Telefone</label>
         <input
           id="telefone"
-          v-model="contact.Telefone"
+          v-model="contact.telefone"
           v-mask="'(##) #####-####'"
           type="text"
           class="form-control"
@@ -41,26 +41,39 @@
 
       <button type="submit" class="btn btn-success w-100">Salvar</button>
     </form>
+    <ErrorMessage :message="errorMessage" />
   </div>
 </template>
 
 <script>
+import { validateContact } from "@/Services/utils.js";
+import ErrorMessage from "@/components/Message/ErrorMessage.vue";
 import Swal from "sweetalert2";
 
 export default {
   name: "AddContact",
+  components: {
+    ErrorMessage,
+  },
   data() {
     return {
       contact: {
-        Nome: "",
-        Email: "",
-        Telefone: "",
+        nome: "",
+        email: "",
+        telefone: "",
       },
+      errorMessage: ''
     };
   },
   methods: {
     async saveContact() {
       try {
+        const [isValid, message] = validateContact(this.contact);
+        if (!isValid) {
+          this.errorMessage = message;
+          return;
+        }
+
         const token = localStorage.getItem("authToken");
         if (!token) {
           console.error("Token de autenticação não encontrado");
@@ -77,8 +90,11 @@ export default {
 
         this.$router.push({ name: "contacts" });
       } catch (error) {
-        console.error("Erro ao salvar o contato", error);
-        Swal.fire("Erro", "Não foi possível salvar o contato. Tente novamente.", "error");
+        Swal.fire(
+          "Erro",
+          "Não foi possível salvar o contato. Tente novamente.",
+          "error"
+        );
       }
     },
   },

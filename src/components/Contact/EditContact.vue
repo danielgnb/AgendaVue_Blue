@@ -42,7 +42,7 @@
               </div>
               <button type="submit" class="btn btn-primary w-100">Salvar Alterações</button>
             </form>
-            <p v-if="errorMessage" class="text-danger mt-3">{{ errorMessage }}</p>
+            <ErrorMessage :message="errorMessage" />
           </div>
         </div>
       </div>
@@ -51,16 +51,21 @@
 </template>
 
 <script>
+import { validateContact } from "@/Services/utils.js";
+import ErrorMessage from "@/components/Message/ErrorMessage.vue";
 import Swal from "sweetalert2";
 
 export default {
   name: 'EditContact',
+  components: {
+    ErrorMessage
+  },
   data() {
     return {
       contact: {
-        Nome: '',
-        Email: '',
-        Telefone: ''
+        nome: '',
+        email: '',
+        telefone: ''
       },
       errorMessage: ''
     };
@@ -79,6 +84,12 @@ export default {
   methods: {
     async updateContact() {
       try {
+        const [isValid, message] = validateContact(this.contact);
+        if (!isValid) {
+          this.errorMessage = message;
+          return;
+        }
+
         const token = localStorage.getItem('authToken');
         if (!token) {
           console.error('Token de autenticação não encontrado');
@@ -97,8 +108,6 @@ export default {
         }
         
       } catch (error) {
-        this.errorMessage = 'Erro ao atualizar o contato.';
-        console.error(error);
         Swal.fire("Erro", "Não foi possível atualizar o contato. Tente novamente.", "error");
       }
     }

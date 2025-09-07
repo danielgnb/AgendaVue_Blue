@@ -30,7 +30,7 @@
               </div>
               <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
             </form>
-            <p v-if="errorMessage" class="text-danger mt-3">{{ errorMessage }}</p>
+            <ErrorMessage :message="errorMessage" />
           </div>
         </div>
       </div>
@@ -39,8 +39,14 @@
 </template>
 
 <script>
+import { validateRegister } from "@/Services/utils.js";
+import ErrorMessage from "@/components/Message/ErrorMessage.vue";
+
 export default {
   name: 'RegisterUser',
+  components: {
+    ErrorMessage
+  },
   data() {
     return {
       username: '',
@@ -48,9 +54,15 @@ export default {
       errorMessage: ''
     };
   },
-  methods: {
+  methods: {    
     async handleRegister() {
       try {
+        const [isValid, errorMessage] = validateRegister(this.password);
+        if (!isValid) {
+          this.errorMessage = errorMessage;
+          return;
+        }
+
         const response = await this.$axios.post('/api/usuario', {
           Username: this.username,
           Password: this.password
@@ -61,7 +73,6 @@ export default {
         }
       } catch (error) {
         this.errorMessage = 'Erro ao cadastrar usuário, tente novamente.';
-        console.error('Erro ao registrar usuário', error);
       }
     }
   }

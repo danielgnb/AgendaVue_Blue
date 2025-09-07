@@ -32,7 +32,7 @@
               </div>
               <button type="submit" class="btn btn-primary w-100">Entrar</button>
             </form>
-            <p v-if="errorMessage" class="text-danger text-center mt-3">{{ errorMessage }}</p>
+            <ErrorMessage :message="errorMessage" />
             <div class="text-center mt-3">
               <button @click="goToRegister" class="btn btn-link">Cadastrar-se</button>
             </div>
@@ -44,10 +44,14 @@
 </template>
 
 <script>
+import ErrorMessage from "@/components/Message/ErrorMessage.vue";
+
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'Login',
-  components: {},
+  components: {
+    ErrorMessage
+  },
   data() {
     return {
       username: '',
@@ -60,8 +64,6 @@ export default {
   methods: {
     async handleLogin() {
       try {
-        this.errorMessage = '';
-
         const response = await this.$axios.post('/api/Auth/login', {
           username: this.username,
           password: this.password,
@@ -73,7 +75,6 @@ export default {
         }
       } catch (error) {
         this.errorMessage = 'Credenciais inválidas, tente novamente.';
-        console.error('Erro ao realizar login', error);
       }
     },
 

@@ -1,6 +1,6 @@
 export function decodeToken(token) {
   if (!token) return null;
-  
+
   const tokenParts = token.split(".");
   if (tokenParts.length !== 3) {
     console.error("Token JWT inválido");
@@ -15,4 +15,24 @@ export function decodeToken(token) {
 
   const payload = atob(base64);
   return JSON.parse(payload);
+}
+
+export function validateContact(contact) {
+  if (!/\S+@\S+\.\S+/.test(contact.email)) {
+    return [false, "Por favor, insira um email válido."];
+  }
+
+  if (!/^\(\d{2}\) \d{5}-\d{4}$/.test(contact.telefone)) {
+    return [false, "Por favor, insira um telefone válido no formato (XX) XXXXX-XXXX."];
+  }
+
+  return [true, ""];
+}
+
+export function validateRegister(password) {
+  if (password.length < 6) {
+    return [false, "A senha deve ter pelo menos 6 caracteres."];
+  }
+
+  return [true, ""];
 }
