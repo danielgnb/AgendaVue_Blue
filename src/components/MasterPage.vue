@@ -1,7 +1,5 @@
 <template>
-  <!-- Master Page com Navbar e conteúdo dinâmico -->
   <div>
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">Minha Agenda</a>
@@ -14,36 +12,97 @@
               <router-link to="/contatos" class="nav-link active">Contatos</router-link>
             </li>
           </ul>
-          <button class="btn btn-danger ms-auto" @click="logout">Sair</button>
+          <div class="btn-group ms-auto">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa fa-cog"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <button class="dropdown-item" @click="deleteUser">
+                  <i class="fa fa-user-times"></i> Excluir Usuário
+                </button>
+              </li>
+              <li>
+                <button class="dropdown-item" @click="logout">
+                  <i class="fa fa-sign-out"></i> Sair
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </nav>
 
-    <!-- Conteúdo Principal -->
     <div class="container mt-4">
-      <router-view></router-view> <!-- Este será o conteúdo dinâmico das rotas -->
+      <router-view></router-view>
     </div>
   </div>
 </template>
 
 <script>
+import { decodeToken } from '@/Services/utils.js';
+
 export default {
   name: 'MasterPage',
   methods: {
-    // Método para o botão de logout
+    async deleteUser() {
+      try {
+        const token = localStorage.getItem("authToken");
+        if (!token) {
+          console.error("Token de autenticação não encontrado");
+          return;
+        }
+
+        const decodedToken = decodeToken(token);
+        if (!decodedToken) {
+          console.error("Erro ao decodificar o token");
+          return;
+        }
+
+        const usuarioId = decodedToken.UsuarioId;
+
+        if (!usuarioId) {
+          console.error("Usuário não encontrado no token.");
+          return;
+        }
+
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        await this.$axios.delete(`/api/usuario/${usuarioId}`, config);
+        this.logout();
+      } catch (error) {
+        console.error("Erro ao excluir usuário", error);
+        this.errorMessage = "Erro ao excluir usuário";
+      }
+    },
+
     logout() {
-      // Remover o token do localStorage (ou outro método de logout)
-      localStorage.removeItem('authToken');
-      // Redirecionar para a página de login
-      this.$router.push({ name: 'login' });
-    }
+      localStorage.removeItem("authToken");
+      this.$router.push({ name: "login" });
+    },
   }
 };
 </script>
 
 <style scoped>
-/* Estilos do Master Page (personalize conforme necessário) */
 .navbar {
   margin-bottom: 20px;
+}
+
+.navbar-nav .nav-link.active {
+  font-weight: bold;
+  color: #ffffff !important;
+}
+
+.dropdown-menu {
+  min-width: 180px;
+}
+
+.dropdown-item i {
+  margin-right: 8px;
 }
 </style>

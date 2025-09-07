@@ -4,7 +4,7 @@ import MasterPage from '../components/MasterPage.vue';
 
 import RegisterUser from '../components/User/RegisterUser.vue';
 
-import ContactList from '../components/Contact/ContactList.vue';
+import ContactList from '../components/Contact/ListContact.vue';
 import EditContact from '../components/Contact/EditContact.vue';
 import AddContact from '../components/Contact/AddContact.vue';
 

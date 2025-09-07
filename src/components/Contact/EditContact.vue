@@ -51,6 +51,8 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
+
 export default {
   name: 'EditContact',
   data() {
@@ -97,6 +99,7 @@ export default {
       } catch (error) {
         this.errorMessage = 'Erro ao atualizar o contato.';
         console.error(error);
+        Swal.fire("Erro", "Não foi possível atualizar o contato. Tente novamente.", "error");
       }
     }
   }

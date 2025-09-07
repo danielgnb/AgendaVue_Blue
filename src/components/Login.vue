@@ -60,6 +60,8 @@ export default {
   methods: {
     async handleLogin() {
       try {
+        this.errorMessage = '';
+
         const response = await this.$axios.post('/api/Auth/login', {
           username: this.username,
           password: this.password,

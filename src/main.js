@@ -2,8 +2,9 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
 import VueTheMask from 'vue-the-mask';
-import axios from './axios'; 
+import axios from './axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap';
 import 'font-awesome/css/font-awesome.min.css';
 
 const app = createApp(App);
