@@ -1,6 +1,7 @@
+// vue.config.js
 module.exports = {
   devServer: {
-    port: 8081,  // Força a porta 8081
+    port: 8081,
     open: true,
     hot: true,
     proxy: {
@@ -13,8 +14,8 @@ module.exports = {
         },
       },
     },
-    before: function(app, server) {
-      server._watch('./public/index.html');
-    }
-  }
+    setupMiddlewares: (middlewares) => {
+      return middlewares;
+    },
+  },
 };
