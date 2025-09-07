@@ -45,6 +45,8 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
+
 export default {
   name: "AddContact",
   data() {
@@ -76,6 +78,7 @@ export default {
         this.$router.push({ name: "contacts" });
       } catch (error) {
         console.error("Erro ao salvar o contato", error);
+        Swal.fire("Erro", "Não foi possível salvar o contato. Tente novamente.", "error");
       }
     },
   },
