@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { validateContact } from "@/Services/utils.js";
+import { validateContact, decryptParameter } from "@/Services/utils.js";
 import ErrorMessage from "@/components/Message/ErrorMessage.vue";
 import Swal from "sweetalert2";
 
@@ -72,7 +72,7 @@ export default {
   },
   async created() {
     try {
-      const contactId = this.$route.params.id;
+      const contactId = decryptParameter(this.$route.params.id);
       const response = await this.$axios.get(`/api/contato/${contactId}`);
 
       this.contact = response.data;

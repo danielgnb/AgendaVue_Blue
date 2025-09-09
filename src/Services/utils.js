@@ -36,3 +36,11 @@ export function validateRegister(password) {
 
   return [true, ""];
 }
+
+export function encryptParameter(param) {
+  return btoa(encodeURIComponent(param));
+}
+
+export function decryptParameter(param) {
+  return decodeURIComponent(atob(param));
+}

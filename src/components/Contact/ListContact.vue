@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import { decodeToken } from "@/Services/utils.js";
+import { decodeToken, encryptParameter } from "@/Services/utils.js";
 import ViewUser from "@/components/User/ViewUser.vue";
 import * as bootstrap from 'bootstrap';
 import Swal from "sweetalert2";
@@ -144,7 +144,8 @@ export default {
     },
 
     editContact(contact) {
-      this.$router.push({ name: "editContact", params: { id: contact.id } });
+      const idEncrypted = encryptParameter(contact.id);
+      this.$router.push({ name: "editContact", params: { id: idEncrypted } });
     },
 
     openDeleteModal(contact) {
